@@ -809,23 +809,26 @@ with tab_compare:
     current_snapshot = _snapshot(Path(selected_path).name, totals, calls, estimated_cost)
 
     st.markdown("### 1. Save a run to history")
-    st.caption("Saved runs remain available after restarting the app. History is stored locally in tokenluma_history.json.")
-    save_col, label_col = st.columns([1, 2])
-    with label_col:
-        run_note = st.text_input(
-            "Experiment note (optional)",
-            placeholder="e.g. Used targeted file reads instead of reading the whole repository",
-            key="tokenluma_run_note",
-        )
-    with save_col:
-        st.write("")
-        st.write("")
-        if st.button("💾 Save current run", type="primary", use_container_width=True):
-            current_snapshot["note"] = run_note.strip()
-            history["snapshots"].append(current_snapshot)
-            if _save_history(history):
-                st.success("Run saved to persistent history.")
-                st.rerun()
+    if source_mode == "Demo mode (synthetic)":
+        st.info("Demo Mode is for exploration only. Saving synthetic data to your persistent experiment history is disabled.")
+    else:
+        st.caption("Saved runs remain available after restarting the app. History is stored locally in tokenluma_history.json.")
+        save_col, label_col = st.columns([1, 2])
+        with label_col:
+            run_note = st.text_input(
+                "Experiment note (optional)",
+                placeholder="e.g. Used targeted file reads instead of reading the whole repository",
+                key="tokenluma_run_note",
+            )
+        with save_col:
+            st.write("")
+            st.write("")
+            if st.button("💾 Save current run", type="primary", use_container_width=True):
+                current_snapshot["note"] = run_note.strip()
+                history["snapshots"].append(current_snapshot)
+                if _save_history(history):
+                    st.success("Run saved to persistent history.")
+                    st.rerun()
 
     history = _load_history()
     snapshots = history.get("snapshots", [])
@@ -941,6 +944,7 @@ with tab_compare:
 
     history = _load_history()
     saved_comparisons = history.get("comparisons", [])
+    saved_snapshots = history.get("snapshots", [])
     st.markdown("### 3. Experiment history")
     if saved_comparisons:
         display_rows = [{
@@ -959,12 +963,24 @@ with tab_compare:
             file_name="tokenluma-experiment-history.csv",
             mime="text/csv",
         )
-        if st.button("🗑️ Clear saved experiment history", type="secondary"):
-            if _save_history({"snapshots": [], "comparisons": []}):
-                st.success("Experiment history cleared.")
-                st.rerun()
     else:
         st.caption("Your saved comparisons will appear here so you can track experiments over time.")
+
+    if saved_snapshots or saved_comparisons:
+        if st.button("🗑️ Clear saved experiment history", type="secondary"):
+            st.session_state["tokenluma_confirm_clear_history"] = True
+        if st.session_state.get("tokenluma_confirm_clear_history", False):
+            st.warning("This permanently removes saved run snapshots and comparisons from tokenluma_history.json.")
+            confirm_col, cancel_col = st.columns(2)
+            with confirm_col:
+                if st.button("Yes, clear history", type="primary", key="tokenluma_confirm_clear_yes"):
+                    if _save_history({"snapshots": [], "comparisons": []}):
+                        st.session_state["tokenluma_confirm_clear_history"] = False
+                        st.rerun()
+            with cancel_col:
+                if st.button("Cancel", key="tokenluma_confirm_clear_cancel"):
+                    st.session_state["tokenluma_confirm_clear_history"] = False
+                    st.rerun()
 
     st.warning(
         "Interpret carefully: these are differences between sessions, not proof that a recommendation caused the change. "

@@ -22,7 +22,7 @@ The goal is practical learning—not a magic “save tokens” button. TokenLuma
 - **Saving opportunities:** highlights patterns such as large context additions, repeated reads, long contexts, verbose replies, and cache misses using the project's rule-based analysis.
 - **Actionable examples:** offers ideas like searching for a specific function instead of reading a large file, narrowing command output, or asking for a shorter response.
 - **Cost estimates:** estimates cost using rates you enter. The values are estimates, not official billing.
-- **Before/after experiments:** save named runs, compare two runs, and record comparisons across multiple experiments.
+- **Before/after experiments:** save named runs, compare two runs, and record comparisons across multiple experiments. Demo sessions cannot be saved into experiment history.
 - **CSV exports:** export reports and experiment history for further analysis.
 - **Neon UI:** dark, orbital-inspired design with a custom background and a built-in dots-orbit logo.
 
