@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Local usage data: never commit transcripts or saved comparison history
+*.jsonl
+tokenluma_history.json
+*.csv
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
+
+# Streamlit secrets
+.streamlit/secrets.toml
