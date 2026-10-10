@@ -6,3 +6,10 @@
 - `assets/tokenluma_logo.png` is a standalone source asset; the running app embeds the logo bytes so the PNG is not required at runtime.
 - `tokenluma_history.json` is created locally when runs/comparisons are saved; it is intentionally git-ignored.
 - No code from `alexgreensh/token-optimizer` has been copied into this project. Review its license before using any of its code in a future implementation.
+
+## Repository maintenance
+
+- Demo mode is synthetic and should never be described as measured user activity.
+- Temporary files created for uploads or demo analysis are removed immediately after parsing.
+- CI runs the unittest suite and Python compilation checks on Python 3.10, 3.11, and 3.12.
+- Dependency update proposals are managed by GitHub Dependabot.

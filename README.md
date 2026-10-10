@@ -67,6 +67,13 @@ python -m py_compile tokenluma_core.py tokenluma_app.py
 
 GitHub Actions runs the tests and syntax check on each push and pull request.
 
+## Project guides
+
+- [Contributing](CONTRIBUTING.md) — local setup, tests, and pull request guidance.
+- [Security policy](SECURITY.md) — how to report security concerns safely.
+- [Changelog](CHANGELOG.md) — user-visible changes.
+- [Issue templates](https://github.com/hpsunil/TokenLuma/issues/new/choose) — report a bug or suggest an improvement.
+
 ## Demo mode and privacy
 
 Demo mode uses a built-in synthetic transcript and does not need access to your own session files. Analysis of real transcripts happens locally in the Streamlit process; TokenLuma does not intentionally upload transcript contents to a remote service. If you host the app on a server, remember that any uploaded file is processed on that server—use a trusted deployment and avoid public hosting for sensitive data.

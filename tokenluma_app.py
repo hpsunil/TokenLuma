@@ -170,14 +170,12 @@ with st.sidebar:
 
     selected_path = None
     uploaded = None
+    temporary_transcript_path = None
     if source_mode == "Demo mode (synthetic)":
-        demo_path = st.session_state.get("_tokenluma_demo_path")
-        if not demo_path or not os.path.isfile(demo_path):
-            with tempfile.NamedTemporaryFile("w", suffix=".jsonl", encoding="utf-8", delete=False) as tmp:
-                tmp.write(tc.demo_transcript_jsonl())
-                demo_path = tmp.name
-            st.session_state["_tokenluma_demo_path"] = demo_path
-        selected_path = demo_path
+        with tempfile.NamedTemporaryFile("w", suffix=".jsonl", encoding="utf-8", delete=False) as tmp:
+            tmp.write(tc.demo_transcript_jsonl())
+            selected_path = tmp.name
+        temporary_transcript_path = selected_path
         st.info("Synthetic sample only — no real prompts, files, or session usage are loaded.")
     elif source_mode == "Latest/local session":
         if sessions:
@@ -198,6 +196,7 @@ with st.sidebar:
             with tempfile.NamedTemporaryFile("wb", suffix=".jsonl", delete=False) as tmp:
                 tmp.write(uploaded.getvalue())
                 selected_path = tmp.name
+            temporary_transcript_path = selected_path
 
     st.divider()
     st.header("Analysis settings")
@@ -233,6 +232,14 @@ try:
 except Exception as exc:
     st.error(f"Could not analyze this transcript: {exc}")
     st.stop()
+finally:
+    # Uploads and generated demo transcripts only need to exist while being parsed.
+    # Remove these temporary copies immediately, including when parsing fails.
+    if temporary_transcript_path:
+        try:
+            os.unlink(temporary_transcript_path)
+        except OSError:
+            pass
 
 if not result:
     st.warning("No API calls with usage data were found in this transcript.")

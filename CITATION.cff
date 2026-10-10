@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use TokenLuma in your work, please cite this repository."
+title: "TokenLuma"
+abstract: "A local-first dashboard for exploring token usage recorded in Claude Code session transcripts."
+authors:
+  - name: "Sunil HP"
+    affiliation: "Independent developer"
+version: 0.1.0
+license: Apache-2.0
+repository-code: "https://github.com/hpsunil/TokenLuma"
+url: "https://github.com/hpsunil/TokenLuma"
