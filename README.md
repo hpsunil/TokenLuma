@@ -53,10 +53,11 @@ streamlit run tokenluma_app.py
 
 Open the local URL printed by Streamlit, usually `http://localhost:8501`.
 
-### If you have no local Claude Code sessions
+### Explore with Demo mode
 
-Start the app and choose **Upload JSONL** in the sidebar, then select a Claude Code transcript file. Keep in mind that transcripts can contain prompts, code snippets, tool output, and local file paths—use files you are comfortable inspecting in the app.
+If no local Claude Code sessions are found, TokenLuma opens **Demo mode** automatically. The built-in transcript is synthetic and includes example context growth, repeated reads, a long reply, and a cache-expiry gap so the charts and warnings have something to show. All demo prompts, paths, timestamps, and token counts are labeled as synthetic; they are not measurements or pricing guidance.
 
+Choose **Latest/local session** to inspect a real local session, or **Upload JSONL** to load a transcript you have selected. A transcript can contain prompts, code, tool output, and local file paths, so only use files you are comfortable inspecting locally.
 ### Run the tests
 
 ```bash
@@ -65,6 +66,10 @@ python -m py_compile tokenluma_core.py tokenluma_app.py
 ```
 
 GitHub Actions runs the tests and syntax check on each push and pull request.
+
+## Demo mode and privacy
+
+Demo mode uses a built-in synthetic transcript and does not need access to your own session files. Analysis of real transcripts happens locally in the Streamlit process; TokenLuma does not intentionally upload transcript contents to a remote service. If you host the app on a server, remember that any uploaded file is processed on that server—use a trusted deployment and avoid public hosting for sensitive data.
 
 ## What the numbers mean
 

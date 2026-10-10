@@ -81,6 +81,71 @@ def find_latest_session():
     return max(files, key=os.path.getmtime) if files else None
 
 
+def demo_transcript_jsonl():
+    """Return a small, fully synthetic Claude Code transcript for safe UI demos.
+
+    The fixture deliberately includes context growth, repeated file reads, a long
+    answer, and a cache-expiry gap so the dashboard has realistic examples to show.
+    No user files, prompts, or session data are read.
+    """
+    def user(text, ts):
+        return {
+            "type": "user", "isSidechain": False, "timestamp": ts,
+            "message": {"role": "user", "content": text},
+        }
+
+    def tool_result(ts):
+        return {
+            "type": "user", "isSidechain": False, "timestamp": ts,
+            "message": {"role": "user", "content": [
+                {"type": "tool_result", "tool_use_id": "demo-tool", "content": "Synthetic tool output."}
+            ]},
+        }
+
+    def assistant(mid, ts, input_tokens, cache_read, cache_write, output_tokens, blocks):
+        return {
+            "type": "assistant", "isSidechain": False, "timestamp": ts,
+            "message": {
+                "id": mid, "model": "claude-demo-synthetic", "role": "assistant",
+                "usage": {
+                    "input_tokens": input_tokens,
+                    "cache_read_input_tokens": cache_read,
+                    "cache_creation_input_tokens": cache_write,
+                    "output_tokens": output_tokens,
+                },
+                "content": blocks,
+            },
+        }
+
+    def use(tid, name, **inputs):
+        return {"type": "tool_use", "id": tid, "name": name, "input": inputs}
+
+    events = [
+        user("Find where request timeouts are configured.", "2026-08-12T10:00:00Z"),
+        assistant("demo-1", "2026-08-12T10:00:05Z", 100, 0, 19900, 120, [
+            {"type": "text", "text": "I'll inspect the service configuration."},
+            use("demo-tool-1", "Read", file_path="/sample-app/services/client.py"),
+        ]),
+        tool_result("2026-08-12T10:00:06Z"),
+        assistant("demo-2", "2026-08-12T10:00:20Z", 120, 20100, 15000, 300, [
+            use("demo-tool-2", "Read", file_path="/sample-app/services/client.py"),
+        ]),
+        tool_result("2026-08-12T10:00:21Z"),
+        assistant("demo-3", "2026-08-12T10:00:35Z", 90, 35000, 400, 4200, [
+            {"type": "text", "text": "Here is a detailed explanation of the timeout path and suggested changes."},
+        ]),
+        user("Run the focused tests and summarize failures.", "2026-08-12T10:12:00Z"),
+        assistant("demo-4", "2026-08-12T10:12:05Z", 150, 0, 160000, 500, [
+            use("demo-tool-4", "Bash", command="pytest -q tests/"),
+        ]),
+        tool_result("2026-08-12T10:12:06Z"),
+        assistant("demo-5", "2026-08-12T10:12:20Z", 100, 160000, 1500, 800, [
+            {"type": "text", "text": "The focused test run finished. Review the failing assertion and rerun the suite."},
+        ]),
+    ]
+    return "\n".join(json.dumps(event, ensure_ascii=False) for event in events) + "\n"
+
+
 def load_session(path, include_sidechain=False):
     """Return (calls, prompts, skipped_lines). Each API call is counted once."""
     events, bad = [], 0

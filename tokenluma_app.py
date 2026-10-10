@@ -160,11 +160,26 @@ def timestamp_text(value):
 with st.sidebar:
     st.header("Session")
     sessions = discover_sessions()
-    source_mode = st.radio("Choose transcript source", ["Latest/local session", "Upload JSONL"], index=0)
+    source_options = ["Demo mode (synthetic)", "Latest/local session", "Upload JSONL"]
+    source_mode = st.radio(
+        "Choose transcript source",
+        source_options,
+        index=1 if sessions else 0,
+        help="Demo mode uses a built-in synthetic transcript and never reads your session files.",
+    )
 
     selected_path = None
     uploaded = None
-    if source_mode == "Latest/local session":
+    if source_mode == "Demo mode (synthetic)":
+        demo_path = st.session_state.get("_tokenluma_demo_path")
+        if not demo_path or not os.path.isfile(demo_path):
+            with tempfile.NamedTemporaryFile("w", suffix=".jsonl", encoding="utf-8", delete=False) as tmp:
+                tmp.write(tc.demo_transcript_jsonl())
+                demo_path = tmp.name
+            st.session_state["_tokenluma_demo_path"] = demo_path
+        selected_path = demo_path
+        st.info("Synthetic sample only — no real prompts, files, or session usage are loaded.")
+    elif source_mode == "Latest/local session":
         if sessions:
             labels = [
                 f"{Path(p).parent.name} / {Path(p).name} · {pd.Timestamp(os.path.getmtime(p), unit='s').strftime('%b %d %H:%M')}"
@@ -224,6 +239,11 @@ if not result:
     st.stop()
 
 calls, prompts, bad, rows, totals = result
+if source_mode == "Demo mode (synthetic)":
+    st.warning(
+        "DEMO MODE · All prompts, paths, timestamps, and token counts shown below are synthetic examples. "
+        "Switch to a local session or upload a JSONL file to inspect real usage."
+    )
 # Estimated cost based on user-entered pricing. Cache writes are kept separate.
 estimated_cost = (
     totals["fresh_input"] * price_input

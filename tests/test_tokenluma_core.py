@@ -142,5 +142,27 @@ class TokenLumaTests(unittest.TestCase):
         self.assertEqual(rows[0]["output"], 4300)
 
 
+    def test_demo_transcript_is_synthetic_and_analyzable(self):
+        raw = tc.demo_transcript_jsonl()
+        with tempfile.NamedTemporaryFile("w", suffix=".jsonl", encoding="utf-8", delete=False) as f:
+            f.write(raw)
+            path = f.name
+        try:
+            calls, prompts, bad = tc.load_session(path)
+            tc.analyze(calls, tc.DEFAULTS)
+            totals = tc.totals(calls)
+            flags = {flag["code"] for call in calls for flag in call["flags"]}
+        finally:
+            os.unlink(path)
+        self.assertEqual(bad, 0)
+        self.assertEqual(len(calls), 5)
+        self.assertEqual(len(prompts), 2)
+        self.assertGreater(totals["cache_read"], 0)
+        self.assertGreater(totals["cache_write"], 0)
+        self.assertTrue({"BIG_ADD", "CACHE_MISS", "LONG_CONTEXT", "VERBOSE_REPLY"} <= flags)
+        self.assertIn("/sample-app/services/client.py", raw)
+        self.assertNotIn("~/.claude/projects/", raw)
+
+
 if __name__ == "__main__":
     unittest.main()
