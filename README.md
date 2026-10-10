@@ -4,8 +4,6 @@
 
 TokenLuma is a local-first dashboard for understanding token usage in Claude Code sessions. It turns raw session transcripts into readable charts, prompt-level reports, API-call details, and practical ideas for reducing unnecessary context and repeated work.
 
-**Built by [@hpsunil](https://github.com/hpsunil)** — an independent developer learning by building practical tools and sharing the journey in public.
-
 [![Tests](https://github.com/hpsunil/TokenLuma/actions/workflows/tests.yml/badge.svg)](https://github.com/hpsunil/TokenLuma/actions/workflows/tests.yml)
 
 ## Why TokenLuma exists
@@ -119,11 +117,9 @@ TokenLuma/
 └── README.md
 ```
 
-## About the developer
+## Project status
 
-Hi! I'm [@hpsunil](https://github.com/hpsunil), an independent developer learning by building useful software. I'm using TokenLuma to learn more about Python, data analysis, product design, automated testing, and how small ideas become tools that other developers can try.
-
-This is a work in progress, built step by step. I want to share what I'm learning, be clear about the limits of the metrics, and improve the project through real feedback. If you spot a bug, have a question, or see a way to make TokenLuma more helpful, please open an issue or suggest an improvement. You don't need to be an expert to start learning or contribute.
+TokenLuma is an independent, evolving project focused on making AI coding-session token usage easier to inspect and understand. The project emphasizes transparent metrics, privacy-conscious handling of local transcripts, clear limitations, and practical feedback from users. Contributions and reproducible bug reports are welcome through GitHub Issues.
 
 ## Scope and independence
 

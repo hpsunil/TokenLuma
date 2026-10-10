@@ -1055,15 +1055,12 @@ with tab_about:
         )
 
     st.divider()
-    st.markdown("### Built by an independent developer")
+    st.markdown("### Project status")
     st.markdown(
         """
-        Hi! I'm [@hpsunil](https://github.com/hpsunil), a small independent developer learning by building
-        practical tools. TokenLuma is part of my learning journey across Python, data analysis, UI design,
-        testing, and building software that other developers can use.
+        TokenLuma is an independent, evolving project focused on making AI coding-session token usage easier to inspect and understand.
 
-        This is a work in progress. I'm sharing it publicly to learn in the open, get feedback, fix bugs,
-        and make the tool better step by step. You don't need to be an expert to start learning or suggest an improvement.
+        The project emphasizes transparent metrics, privacy-conscious handling of local transcripts, clear limitations, and practical feedback from users. Contributions and reproducible bug reports are welcome through the repository's GitHub Issues.
 
         **Project repository:** [github.com/hpsunil/TokenLuma](https://github.com/hpsunil/TokenLuma)
         """
