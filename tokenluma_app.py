@@ -275,8 +275,8 @@ st.caption(
     "These are measured transcript usage fields, not a cost estimate."
 )
 
-tab_overview, tab_prompts, tab_deep_dive, tab_calls, tab_savings, tab_compare = st.tabs(
-    ["📊 Overview", "💬 By prompt", "🔎 Prompt deep dive", "🔬 API calls", "💡 Saving opportunities", "🧪 Before vs after"]
+tab_overview, tab_prompts, tab_deep_dive, tab_calls, tab_savings, tab_compare, tab_about = st.tabs(
+    ["📊 Overview", "💬 By prompt", "🔎 Prompt deep dive", "🔬 API calls", "💡 Saving opportunities", "🧪 Before vs after", "✨ About"]
 )
 
 with tab_overview:
@@ -957,6 +957,72 @@ with st.expander("How to read these numbers"):
         - **Context growth:** current context minus the previous call's context.
         - **Carry:** positive context growth multiplied by the number of later calls, used as a heuristic for repeated context cost.
         - **Cache miss:** earlier context that was not read from cache, as estimated by the existing TokenLuma logic.
+        """
+    )
+
+with tab_about:
+    st.markdown("## What is TokenLuma?")
+    st.markdown(
+        """
+        TokenLuma helps you understand where token usage accumulates in Claude Code sessions.
+        It turns raw JSONL transcript data into readable charts, prompt-level summaries, API-call details,
+        and practical ideas you can test to avoid unnecessary work.
+
+        The goal is to help you **observe, learn, experiment, and measure**—not to promise automatic or guaranteed savings.
+        """
+    )
+
+    about_left, about_right = st.columns(2)
+    with about_left:
+        st.markdown("### What you can do")
+        st.markdown(
+            """
+            - Understand fresh input, cache reads, cache writes, and output tokens.
+            - Find large context additions, repeated reads, long contexts, verbose replies, and cache patterns worth reviewing.
+            - Learn from before/after examples and try one focused optimization at a time.
+            - Save multiple experiment runs, compare results, and export reports to CSV.
+            """
+        )
+        st.markdown("### How the results are produced")
+        st.markdown(
+            """
+            1. TokenLuma reads usage recorded in a Claude Code JSONL transcript.
+            2. The analysis core groups calls with prompts and tool activity.
+            3. Rule-based thresholds flag patterns for you to inspect.
+            4. You compare similar sessions after trying a change.
+            """
+        )
+    with about_right:
+        st.markdown("### Understand the limitations")
+        st.markdown(
+            """
+            - Cost is an estimate based on prices entered in the sidebar, not an official invoice.
+            - Context-carry exposure and saving recommendations are heuristics, not guaranteed savings.
+            - A lower number in a follow-up session does not prove that a particular change caused the reduction.
+            - Compare similar tasks, models, tool activity, and cache conditions.
+            """
+        )
+        st.markdown("### Privacy")
+        st.markdown(
+            """
+            TokenLuma is designed to process transcript data locally and does not require an AI API key.
+            Prompt text and local file paths can be sensitive. Treat screenshots and CSV exports accordingly.
+            Saved experiment history is stored in `tokenluma_history.json` next to the app.
+            """
+        )
+
+    st.divider()
+    st.markdown("### Built by an independent developer")
+    st.markdown(
+        """
+        Hi! I'm [@hpsunil](https://github.com/hpsunil), a small independent developer learning by building
+        practical tools. TokenLuma is part of my learning journey across Python, data analysis, UI design,
+        testing, and building software that other developers can use.
+
+        This is a work in progress. I'm sharing it publicly to learn in the open, get feedback, fix bugs,
+        and make the tool better step by step. You don't need to be an expert to start learning or suggest an improvement.
+
+        **Project repository:** [github.com/hpsunil/TokenLuma](https://github.com/hpsunil/TokenLuma)
         """
     )
 
